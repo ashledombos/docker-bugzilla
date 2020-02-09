@@ -1,0 +1,34 @@
+version: '3.5'
+# Using træfik as reverse proxy, no need to expose apache service on port 80
+
+services:
+  apache:
+    image: ashledombos/bugzilla-apache
+    depends_on:
+      - pg
+    networks:
+      - web
+      - default
+    volumes:
+      - /home/manager/docker/bugzilla/code:/usr/local/apache2/htdocs
+    ports:
+      - 8990:80
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:issues.openmandriva.org"
+  pg:
+    image: postgres:11-alpine
+    volumes:
+      - /home/manager/docker/bugzilla/base:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=bugs
+      - POSTGRES_USER=bugs
+      - POSTGRES_PASSWORD:bugs
+#  adminer:
+#    image: adminer
+#    ports:
+#      - 8989:8080
+networks:
+    web:
+        external: true
