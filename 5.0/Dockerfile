@@ -68,7 +68,7 @@ VOLUME ["/code"]
 
 EXPOSE 80
 
-RUN echo 2
+#RUN echo 2
 
 COPY ./docker-entrypoint.sh /
 
